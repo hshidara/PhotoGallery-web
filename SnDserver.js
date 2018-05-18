@@ -3,6 +3,8 @@
  */
 var static 	= require('node-static');
 var http 	= require('http');
+http.globalAgent.maxSockets = 1;
+
 var server 	= http.createServer(handler);
 var sqlite3 = require("sqlite3").verbose();  // use sqlite
 
@@ -23,23 +25,29 @@ function handler(request,response){
 	let url = request.url;
 	
 	url = url.replace("/","");
-	console.log(url);	
-	idStr = parseFloat(url.split("=")[1]);
-	console.log(idStr);
-	idLst = idStr.split("+");
+	
 	if(is_multiple_queries(url)){
-                if(request_is_query(url) && ids_are_in_range(idLst)){
+		let idStr = parseFloat(url.split("=")[1]);
+		console.log(url,url.split("="),idStr);
+		let idLst = idStr.split("+");
+
+	        if(request_is_query(url) && ids_are_in_range(idLst)){
                         getImagesFromDB(response,idLst,writeResCB);
                 }
-                else if (n<0 || n>=990){
+                else{
                         response.writeHead(400, {"Content-Type": "text/plain"});
                         response.write("Bad Request\n");
                         response.end();
                 }
 	}	
 	else{
-		if(request_is_query(url) && ids_are_in_range(idLst)){
-                	getImagesFromDB(response,idLst,writeResCB);
+		console.log("single query")
+		let n = parseFloat(url.split("=")[1]);
+		let idLst = [];	
+		if(request_is_query(url) && n>0 && n<990){
+			
+			idLst.push(n);
+               		getImagesFromDB(response,idLst,writeResCB);
         	}
         	else if (n<0 || n>=990){
                 	response.writeHead(400, {"Content-Type": "text/plain"});
