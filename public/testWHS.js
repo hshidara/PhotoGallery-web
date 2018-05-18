@@ -33,13 +33,13 @@ function photoByNumber() {
 	
 }
 
-function input_is_valid(in){
+function input_is_valid(input){
 	return true;
 }
 
 function userInput2Query(str){
 	if(str.split(",").length > 1){
-		return "query?numList=" + str.replace(",","+");
+		return "query?numList=" + str.replace(/,/g, "+");
 	}
 	else return "query?num=" + str;
 }
