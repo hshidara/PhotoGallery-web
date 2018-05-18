@@ -1,0 +1,46 @@
+
+body {
+	min-height: 100vh;  /* need this line to
+					tell body to fill viewport */
+	font-family: 'Montserrat', sans-serif;
+	background-color: white;
+	display: flex;
+	flex-direction: column;
+	color: blue;
+     }
+
+header {
+       text-align: center;
+       padding: 10px;
+
+}
+
+
+
+
+main {
+     flex: 1 0 auto;  /* the sticky footer trick without the footer */
+}
+
+
+input {
+	border-style: solid;
+	border-radius: 5px;
+	font-size: medium;
+}
+
+
+p {
+	font-size: medium;
+	margin: 10px;
+}
+
+div#photoDisplay {
+    width: 400px;
+    margin: 20px;
+}
+
+img {
+    width: 100%;
+}
+
