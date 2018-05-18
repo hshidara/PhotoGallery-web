@@ -27,7 +27,7 @@ function handler(request,response){
 	url = url.replace("/","");
 	
 	if(is_multiple_queries(url)){
-		let idStr = parseFloat(url.split("=")[1]);
+		let idStr = url.split("=")[1];
 		console.log(url,url.split("="),idStr);
 		let idLst = idStr.split("+");
 
@@ -44,12 +44,12 @@ function handler(request,response){
 		console.log("single query")
 		let n = parseFloat(url.split("=")[1]);
 		let idLst = [];	
-		if(request_is_query(url) && n>0 && n<990){
+		if(request_is_query(url) && n>0 && n<989){
 			
 			idLst.push(n);
                		getImagesFromDB(response,idLst,writeResCB);
         	}
-        	else if (n<0 || n>=990){
+        	else if (n<0 || n>988){
                 	response.writeHead(400, {"Content-Type": "text/plain"});
                 	response.write("Bad Request\n");
                 	response.end();
@@ -111,7 +111,7 @@ function request_is_query(url){
 
 function ids_are_in_range(lst){
 	lst.forEach(function(l){
-		if(n<=0 && n>990) return false;
+		if(l<=0 && l>989) return false;
 	});
 	return true;
 }
