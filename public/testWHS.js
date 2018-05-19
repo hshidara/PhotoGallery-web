@@ -1,7 +1,6 @@
 var photos = [];
 // Called when the user pushes the "submit" button
 function photoByNumber() {
-
 	var input = document.getElementById("num").value.trim();
 
 	if (input_is_valid(input)) {
@@ -17,20 +16,8 @@ function photoByNumber() {
 
 	function reqListener(){
 		var photoURL = this.responseText;
-/*		var display = document.getElementById("photoDisplay");
-		
-		if(document.getElementById("url_text_container")) document.getElementById("url_text_container").remove();
-
-		var textContainer = document.createElement("div");
-		textContainer.id = "url_text_container";
-		var text = document.createTextNode("Source: http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO @ "+photoURL);
-		
-		textContainer.appendChild(text);
-		display.append(textContainer);
-
-		var img = document.getElementById("photoImg");
-                img.src = "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/" + String(photoURL);
-*/		
+		const placeholder = document.getElementById("placeholder");
+        	placeholder.style.display = "none";
 		const reactContainer = document.getElementById("react");
 		photos = setPhotos(photoURL);
 		ReactDOM.render(React.createElement(App),reactContainer);
@@ -55,11 +42,7 @@ function setPhotos(str){
 	
 	imgLst.map(function(img){
 		img.src =  "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/" + String(img.fileName);	
-/*		delete img.fileName;
-                delete img.id;
-                delete img.tags;
-                delete img.location;
-*/	});
+	});
 	console.log(imgLst);
 	return imgLst;
 }
@@ -154,11 +137,24 @@ class App extends React.Component {
   }
 
   render() {
-    return (
-       React.createElement( Gallery, {photos: photos,
-                   onClick: this.selectTile,
-                   ImageComponent: ImageTile} )
-            );
+	if(window.innerWidth <= 480){
+                return (
+                        React.createElement( Gallery, {photos: photos,
+                        onClick: this.selectTile,
+                        ImageComponent: ImageTile,
+                        columns:1
+                        } )
+                );	
+	}
+	else{
+    		return (
+       			React.createElement( Gallery, {photos: photos,
+                   	onClick: this.selectTile,
+                   	ImageComponent: ImageTile,
+		   	columns:2	
+			} )
+            	);
+  	}
   }
 
 }

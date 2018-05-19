@@ -11,27 +11,21 @@
 
 <body>
 
-<header>
-<h1>Testing PhotoQ</h1>
+<main>
+<header id="query">
+	<h2 id="photo-header">PhotoQ</h2>
+	<input id="num" placeholder=""> 
+	<button id="num-button"  onclick="photoByNumber()">&#x1F50D;</button>
 </header>
 
-
-<main>
-<div id="query">
-<p>
-Load a photo by number:
-</p>
-
-<input id="num" placeholder="photo number"> 
-<button onclick="photoByNumber()">Submit</button>
-</div>
-
-<div id="photoDisplay">
-<img id="photoImg">
-</div>
-
-<h2>PhotoQ</h2>
 <div id="react"></div>
+
+<div id="placeholder">
+	<span>Nothing's been searched yet!</span>
+	<span><br></span>
+        <span>Use the search above</span>
+</div>
+
 </main>
 
 <!-- The Javascript for this page -->
