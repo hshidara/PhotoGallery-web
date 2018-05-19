@@ -1,4 +1,4 @@
-
+var photos = [];
 // Called when the user pushes the "submit" button
 function photoByNumber() {
 
@@ -17,7 +17,7 @@ function photoByNumber() {
 
 	function reqListener(){
 		var photoURL = this.responseText;
-		var display = document.getElementById("photoDisplay");
+/*		var display = document.getElementById("photoDisplay");
 		
 		if(document.getElementById("url_text_container")) document.getElementById("url_text_container").remove();
 
@@ -27,8 +27,13 @@ function photoByNumber() {
 		
 		textContainer.appendChild(text);
 		display.append(textContainer);
+
 		var img = document.getElementById("photoImg");
                 img.src = "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/" + String(photoURL);
+*/		
+		const reactContainer = document.getElementById("react");
+		photos = setPhotos(photoURL);
+		ReactDOM.render(React.createElement(App),reactContainer);
 	}
 	
 }
@@ -43,3 +48,118 @@ function userInput2Query(str){
 	}
 	else return "query?num=" + str;
 }
+
+
+function setPhotos(str){
+	const imgLst = JSON.parse(str);
+	
+	imgLst.map(function(img){
+		img.src =  "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/" + String(img.fileName);	
+/*		delete img.fileName;
+                delete img.id;
+                delete img.tags;
+                delete img.location;
+*/	});
+	console.log(imgLst);
+	return imgLst;
+}
+
+
+/*
+ * REACT COMPONENT
+ */
+
+// A react component for a tag
+class Tag extends React.Component {
+
+    render () {
+        return React.createElement('p',  // type
+            { className: 'tagText'}, // properties
+           this.props.text);  // contents
+    }
+};
+
+// A react component for controls on an image tile
+class TileControl extends React.Component {
+
+    render () {
+        // remember input vars in closure
+        var _selected = this.props.selected;
+        var _src = this.props.src;
+        // parse image src for photo name
+        var photoName = _src.split("/").pop();
+        photoName = photoName.split('%20').join(' ');
+
+        return ( React.createElement('div',
+         {className: _selected ? 'selectedControls' : 'normalControls'},
+         // div contents - so far only one tag
+              React.createElement(Tag,
+                 { text: photoName })
+            )// createElement div
+        )// return
+    } // render
+};
+
+// A react component for an image tile
+class ImageTile extends React.Component {
+
+    render() {
+        // onClick function needs to remember these as a closure
+        var _onClick = this.props.onClick;
+        var _index = this.props.index;
+        var _photo = this.props.photo;
+        var _selected = _photo.selected; // this one is just for readability
+
+        return (
+            React.createElement('div',
+                {style: {margin: this.props.margin, width: _photo.width},
+                         className: 'tile',
+                         onClick: function onClick(e) {
+                            console.log("tile onclick");
+                            // call Gallery's onclick
+                            return _onClick (e,
+                                             { index: _index, photo: _photo })
+                                }
+                 }, // end of props of div
+                 // contents of div - the Controls and an Image
+                React.createElement(TileControl,
+                    {selected: _selected,
+                     src: _photo.src}),
+                React.createElement('img',
+                    {className: _selected ? 'selected' : 'normal',
+                     src: _photo.src,
+                     width: _photo.width,
+                     height: _photo.height
+                            })
+                                )//createElement div
+        ); // return
+    } // render
+} // class
+
+// The react component for the whole image gallery
+// Most of the code for this is in the included library
+class App extends React.Component {
+
+  constructor(props) {
+    super(props);
+    this.state = { photos: photos };
+    this.selectTile = this.selectTile.bind(this);
+  }
+
+  selectTile(event, obj) {
+    console.log("in onclick!", obj);
+    let photos = this.state.photos;
+    photos[obj.index].selected = !photos[obj.index].selected;
+    this.setState({ photos: photos });
+  }
+
+  render() {
+    return (
+       React.createElement( Gallery, {photos: photos,
+                   onClick: this.selectTile,
+                   ImageComponent: ImageTile} )
+            );
+  }
+
+}
+

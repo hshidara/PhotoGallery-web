@@ -11,8 +11,6 @@ const photos = [
 {src: "http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/Red%20pencil%20urchin%20-%20Papahnaumokukea.jpg", width: 574 , height: 382 }
 ];
 
-
-
 // A react component for a tag
 class Tag extends React.Component {
 
@@ -97,6 +95,7 @@ class App extends React.Component {
   selectTile(event, obj) {
     console.log("in onclick!", obj);
     let photos = this.state.photos;
+    console.log(photos);
     photos[obj.index].selected = !photos[obj.index].selected;
     this.setState({ photos: photos });
   }
@@ -116,12 +115,3 @@ class App extends React.Component {
 const reactContainer = document.getElementById("react");
 
 ReactDOM.render(React.createElement(App),reactContainer);
-
-
-
-
-
-
-
-
-
