@@ -13,9 +13,7 @@ var sqlite3 = require("sqlite3").verbose();  // use sqlite
  */
 
 var fs = require('fs');  // file access module
-//var imgList = [];
 
-//loadImageList();
 /*
  * SERVER FUNCTIONS
  */
@@ -28,7 +26,6 @@ function handler(request,response){
 	
 	if(is_multiple_queries(url)){
 		let idStr = url.split("=")[1];
-		console.log(url,url.split("="),idStr);
 		let idLst = idStr.split("+");
 
 	        if(request_is_query(url) && ids_are_in_range(idLst)){
@@ -39,7 +36,12 @@ function handler(request,response){
                         response.write("Bad Request\n");
                         response.end();
                 }
-	}	
+	}
+	else if(is_key_list_query(url)){
+	        let idStr = url.split("=")[1];
+                let idLst = idStr.split("+");
+		getImgsFromKeys(response,idLst,writeResCB);
+	}
 	else{
 		console.log("single query")
 		let n = parseFloat(url.split("=")[1]);
@@ -84,23 +86,40 @@ function getImagesFromDB(res,lst,callback){
 	db.close();
 }
 
+function getImgsFromKeys(res,lst,callback){
+	let db = new sqlite3.Database("PhotoQ.db");
+	let cmdStr = "SELECT * FROM photoTags WHERE ";
+	lst.forEach(function(key,i){
+		key = decodeURIComponent(key);
+		if((/[^a-z ]/.test(key))){
+			cmdStr = cmdStr;
+		} 
+		else if(i == 0) cmdStr = cmdStr+"(location = "+'"'+key+'"'+" OR tags LIKE "+'"'+"%"+key+"%"+'"'+") ";
+		else{
+			cmdStr = cmdStr+"AND (location = "+'"'+key+'"'+" OR tags LIKE "+'"'+"%"+key+"%"+'"'+")";
+		}
+	});
+	console.log(cmdStr);
+//	cmdStr = 'SELECT * FROM photoTags'; 
+//	db.all('SELECT * FROM photoTags',dataCallback);
+        db.all(cmdStr,dataCallback);
+	function dataCallback( err, data ) {
+		console.log(data);
+		let res_obj;
+		if(data && data.length > 0) res_obj = { "data": data, "message":"These are all of the photos satisfying this query."};
+		else res_obj = { "message":"These were no photos satisfying this query"};
+		callback(res,res_obj);
+	}
+	
+	db.close();
+}
+
 function writeResCB(response,d){	
 	response.writeHead(200, {"Content-Type": "text/plain"});
 	response.write(JSON.stringify(d));
 	response.end();
 }
 
-/*
-function loadImageList () {
-    var data = fs.readFileSync('photoList.json');
-    if (! data) {
-	    console.log("cannot read photoList.json");
-    } else {
-	    listObj = JSON.parse(data);
-	    imgList = listObj.photoURLs;
-    }
-}
-*/
 /* 
  * CONDITIONALS
  */
@@ -118,6 +137,10 @@ function ids_are_in_range(lst){
 
 function is_multiple_queries(url){
 	return url.includes("query?numList");
+}
+
+function is_key_list_query(url){
+	return url.includes("query?keyList=");
 }
 
 function query_is_valid(url){
