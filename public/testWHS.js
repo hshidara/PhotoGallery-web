@@ -1,4 +1,4 @@
-var photos = [];
+let photos = [];
 // Called when the user pushes the "submit" button
 function photoByNumber() {
 	var input = document.getElementById("num").value.trim();
@@ -56,9 +56,15 @@ function setPhotos(str){
 class Tag extends React.Component {
 
     render () {
-        return React.createElement('p',  // type
-            { className: 'tagText'}, // properties
+	 return React.createElement('p', // type
+	 	{ className: 'tagText',
+	 		onClick: () => alert("Tag [" + this.props.text + "] from image [" + this.props.parentImage + "] was clicked!")
+	 	}, // properties
+		this.props.text); 
+/*        return React.createElement('div',  // type
+            {className: 'tagText'}, // properties
            this.props.text);  // contents
+*/
     }
 };
 
@@ -69,17 +75,39 @@ class TileControl extends React.Component {
         // remember input vars in closure
         var _selected = this.props.selected;
         var _src = this.props.src;
+	var photoNames = this.props.tags.split(",");	
         // parse image src for photo name
         var photoName = _src.split("/").pop();
         photoName = photoName.split('%20').join(' ');
+	
+//	this.state = {tagArray:this.props.tags};
+	this.state = {tagEls: []};	
+	//let tagEls = [];
 
+
+       	 var args = [];
+	 args.push( 'div' );
+
+	 args.push( { className: _selected ? 'selectedControls' : 'normalControls'} )
+
+	 for(let idx = 0; idx < photoNames.length; idx++)
+		 args.push( React.createElement(Tag,
+	 		{text: photoNames[idx], parentImage: _src}
+	 ));
+	 return ( React.createElement.apply(null, args) ); 
+
+/*
         return ( React.createElement('div',
          {className: _selected ? 'selectedControls' : 'normalControls'},
          // div contents - so far only one tag
-              React.createElement(Tag,
-                 { text: photoName })
+		tagArray.forEach(function(tag,i){
+			this.state.tagEls.push(React.createElement(Tag,
+                			{ text: tag, key:String(tag)+String(i) }))
+		})	      		
             )// createElement div
         )// return
+*/
+
     } // render
 };
 
@@ -107,7 +135,8 @@ class ImageTile extends React.Component {
                  // contents of div - the Controls and an Image
                 React.createElement(TileControl,
                     {selected: _selected,
-                     src: _photo.src}),
+                     src: _photo.src,
+		     tags:_photo.tags}),
                 React.createElement('img',
                     {className: _selected ? 'selected' : 'normal',
                      src: _photo.src,
