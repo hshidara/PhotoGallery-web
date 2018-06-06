@@ -36,6 +36,14 @@ div#placeholder span{
 	color:#778899;
 }
 
+div#autocomplete{
+	display:none;
+	align-self:center;
+	width:47%;
+	flex-basis:50%;
+	border: 5px solid red;
+
+}
 
 header#query{
 	flex:0;
@@ -109,17 +117,24 @@ div.tile {
     position: relative;
 }
 
+.selectedControls{
+    display:flex;
+    flex-direction:column;
+    flex-wrap:wrap;
+}
+
 /* Tag styling */
 p.tagText {
    left: 4px; 
    top: 4px; 
-   position: absolute; 
+   position: absolute;
    zIndex: 2;
    background-color: blue;
    padding: 5px;
    border-radius: 5px;
    color: white;
    word-break: break-all;
+   max-width:140px;
 }
 
 
@@ -131,6 +146,18 @@ img {
 img.normal {
 }
 
+.selectedControls .tagText {
+   position:static;
+   zIndex: 1;
+   background-color: blue;
+   padding: 5px;
+   border-radius: 5px;
+   color: white;
+   word-break: break-all;
+}
+
 img.selected {
+    	top:0;
+	left:0;
 }
 

@@ -7,12 +7,15 @@ http.globalAgent.maxSockets = 1;
 
 var server 	= http.createServer(handler);
 var sqlite3 = require("sqlite3").verbose();  // use sqlite
+var auto = require("./makeTagTable");
 
 /*
  * IMAGE VARS
  */
 
 var fs = require('fs');  // file access module
+
+var tagTable = {};   // global
 
 /*
  * SERVER FUNCTIONS
@@ -41,6 +44,15 @@ function handler(request,response){
 	        let idStr = url.split("=")[1];
                 let idLst = idStr.split("+");
 		getImgsFromKeys(response,idLst,writeResCB);
+	}
+	else if(is_autocomplete_query(url)){
+		console.log("is autocomplete");
+		auto.makeTagTable(tagTableCallback);
+		function tagTableCallback(data) {
+        		tagTable = data;
+			writeResCB(response,data);
+        		console.log(data);
+		}
 	}
 	else{
 		console.log("single query")
@@ -141,6 +153,10 @@ function is_multiple_queries(url){
 
 function is_key_list_query(url){
 	return url.includes("query?keyList=");
+}
+
+function is_autocomplete_query(url){
+	return url.includes("query?autocomplete=");
 }
 
 function query_is_valid(url){

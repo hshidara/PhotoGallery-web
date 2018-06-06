@@ -14,9 +14,12 @@
 <main>
 <header id="query">
 	<h2 id="photo-header">PhotoQ</h2>
-	<input id="num" placeholder=""> 
+	<input id="num" placeholder="" onkeydown="onInputChange(this.value)"> 
 	<button id="num-button"  onclick="photoByNumber()">&#x1F50D;</button>
 </header>
+<div id="autocomplete">
+
+</div>
 
 <div id="react"></div>
 
@@ -25,7 +28,7 @@
 	<span><br></span>
         <span>Use the search above</span>
 </div>
-
+	
 </main>
 
 <!-- The Javascript for this page -->

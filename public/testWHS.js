@@ -47,6 +47,48 @@ function setPhotos(str){
 	return imgLst;
 }
 
+function onInputChange(input){
+	console.log(input);
+	let autocomplete_lst = {};
+	if(input.length >= 2){
+		
+		let oReq = new XMLHttpRequest();
+
+                const url = "query?autocomplete="+input;
+                console.log(url);
+                oReq.open("GET",url);
+                oReq.addEventListener("load", reqListener);
+                oReq.send();
+
+		if(input.length > 2){
+			return;	
+		}
+	}
+	
+	function reqListener(){
+		const tagArray = this.responseText;
+		autocomplete_lst = tagArray[input]["tags"];
+		const strs
+
+	//	var strs = [ "String 1", "String 2", "String 3" ];
+		var list = document.createElement("ul");
+		for (var i in strs) {
+		  var anchor = document.createElement("a");
+		  anchor.href = "#";
+		  anchor.innerText = strs[i];
+
+		  var elem = document.createElement("li");
+		  elem.appendChild(anchor);
+		  list.appendChild(elem);
+		}				
+	}
+}
+
+/*
+ * AUTOCOMPLETE
+ */
+
+
 
 /*
  * REACT COMPONENT
@@ -61,10 +103,6 @@ class Tag extends React.Component {
 	 		onClick: () => alert("Tag [" + this.props.text + "] from image [" + this.props.parentImage + "] was clicked!")
 	 	}, // properties
 		this.props.text); 
-/*        return React.createElement('div',  // type
-            {className: 'tagText'}, // properties
-           this.props.text);  // contents
-*/
     }
 };
 
@@ -95,19 +133,6 @@ class TileControl extends React.Component {
 	 		{text: photoNames[idx], parentImage: _src}
 	 ));
 	 return ( React.createElement.apply(null, args) ); 
-
-/*
-        return ( React.createElement('div',
-         {className: _selected ? 'selectedControls' : 'normalControls'},
-         // div contents - so far only one tag
-		tagArray.forEach(function(tag,i){
-			this.state.tagEls.push(React.createElement(Tag,
-                			{ text: tag, key:String(tag)+String(i) }))
-		})	      		
-            )// createElement div
-        )// return
-*/
-
     } // render
 };
 
