@@ -31,7 +31,7 @@ function loadImg(lst){
 	lst.forEach(function(img,i){
 		let info = {
 			id:i,
-			fileName:encodeURIComponent(img.replace("http://lotus.idav.ucdavis.edu/public/ecs162/UNESCO/","")),
+			fileName:encodeURIComponent(img.replace("ADD_KEY_HERE","")),
 			height:0,
 			width:0,
 			location:"",
