@@ -155,7 +155,7 @@ function annotateImage(d,img,i) {
 	// an HTTP message containing the request to the API server
 	APIrequest(
 	    { // HTTP header stuff
-		url: 'https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBvMHGa8pnGaX27WJiktMH2GFrZrpu5rSc',
+		url: 'https://vision.googleapis.com/v1/images:annotate?key=ADD_KEY_HERE',
 		method: "POST",
 		headers: {"content-type": "application/json"},
 		// will turn the given object into JSON
